@@ -2,7 +2,7 @@
   ACPI 6.3 definitions from the ACPI Specification Revision 6.3 Jan, 2019.
 
   Copyright (c) 2017, Intel Corporation. All rights reserved.<BR>
-  Copyright (c) 2019 - 2020, ARM Ltd. All rights reserved.<BR>
+  Copyright (c) 2019 - 2021, ARM Ltd. All rights reserved.<BR>
 
   SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
@@ -1035,30 +1035,30 @@ typedef struct {
   UINT16                      Length;
   UINT16                      Flags;
   UINT16                      Reserved1;
-} EFI_ACPI_6_3_PMMT_COMMON_MEMORY_AGGREGATOR_DEVICE_STRUCTURE;
+} EFI_ACPI_6_3_PMTT_COMMON_MEMORY_AGGREGATOR_DEVICE_STRUCTURE;
 
 ///
 /// Memory Aggregator Device Type
 ///
-#define EFI_ACPI_6_3_PMMT_MEMORY_AGGREGATOR_DEVICE_TYPE_SOCKET            0x1
-#define EFI_ACPI_6_3_PMMT_MEMORY_AGGREGATOR_DEVICE_TYPE_MEMORY_CONTROLLER 0x2
-#define EFI_ACPI_6_3_PMMT_MEMORY_AGGREGATOR_DEVICE_TYPE_DIMM              0x3
+#define EFI_ACPI_6_3_PMTT_MEMORY_AGGREGATOR_DEVICE_TYPE_SOCKET            0x1
+#define EFI_ACPI_6_3_PMTT_MEMORY_AGGREGATOR_DEVICE_TYPE_MEMORY_CONTROLLER 0x2
+#define EFI_ACPI_6_3_PMTT_MEMORY_AGGREGATOR_DEVICE_TYPE_DIMM              0x3
 
 ///
 /// Socket Memory Aggregator Device Structure.
 ///
 typedef struct {
-  EFI_ACPI_6_3_PMMT_COMMON_MEMORY_AGGREGATOR_DEVICE_STRUCTURE  Header;
+  EFI_ACPI_6_3_PMTT_COMMON_MEMORY_AGGREGATOR_DEVICE_STRUCTURE  Header;
   UINT16                                                       SocketIdentifier;
   UINT16                                                       Reserved;
-//EFI_ACPI_6_3_PMMT_MEMORY_CONTROLLER_MEMORY_AGGREGATOR_DEVICE_STRUCTURE  MemoryController[];
-} EFI_ACPI_6_3_PMMT_SOCKET_MEMORY_AGGREGATOR_DEVICE_STRUCTURE;
+//EFI_ACPI_6_3_PMTT_MEMORY_CONTROLLER_MEMORY_AGGREGATOR_DEVICE_STRUCTURE  MemoryController[];
+} EFI_ACPI_6_3_PMTT_SOCKET_MEMORY_AGGREGATOR_DEVICE_STRUCTURE;
 
 ///
 /// MemoryController Memory Aggregator Device Structure.
 ///
 typedef struct {
-  EFI_ACPI_6_3_PMMT_COMMON_MEMORY_AGGREGATOR_DEVICE_STRUCTURE  Header;
+  EFI_ACPI_6_3_PMTT_COMMON_MEMORY_AGGREGATOR_DEVICE_STRUCTURE  Header;
   UINT32                                                       ReadLatency;
   UINT32                                                       WriteLatency;
   UINT32                                                       ReadBandwidth;
@@ -1068,19 +1068,19 @@ typedef struct {
   UINT16                                                       Reserved;
   UINT16                                                       NumberOfProximityDomains;
 //UINT32                                                       ProximityDomain[NumberOfProximityDomains];
-//EFI_ACPI_6_3_PMMT_DIMM_MEMORY_AGGREGATOR_DEVICE_STRUCTURE    PhysicalComponent[];
-} EFI_ACPI_6_3_PMMT_MEMORY_CONTROLLER_MEMORY_AGGREGATOR_DEVICE_STRUCTURE;
+//EFI_ACPI_6_3_PMTT_DIMM_MEMORY_AGGREGATOR_DEVICE_STRUCTURE    PhysicalComponent[];
+} EFI_ACPI_6_3_PMTT_MEMORY_CONTROLLER_MEMORY_AGGREGATOR_DEVICE_STRUCTURE;
 
 ///
 /// DIMM Memory Aggregator Device Structure.
 ///
 typedef struct {
-  EFI_ACPI_6_3_PMMT_COMMON_MEMORY_AGGREGATOR_DEVICE_STRUCTURE  Header;
+  EFI_ACPI_6_3_PMTT_COMMON_MEMORY_AGGREGATOR_DEVICE_STRUCTURE  Header;
   UINT16                                                       PhysicalComponentIdentifier;
   UINT16                                                       Reserved;
   UINT32                                                       SizeOfDimm;
   UINT32                                                       SmbiosHandle;
-} EFI_ACPI_6_3_PMMT_DIMM_MEMORY_AGGREGATOR_DEVICE_STRUCTURE;
+} EFI_ACPI_6_3_PMTT_DIMM_MEMORY_AGGREGATOR_DEVICE_STRUCTURE;
 
 ///
 /// Boot Graphics Resource Table definition.
@@ -1093,8 +1093,14 @@ typedef struct {
   UINT16                      Version;
   ///
   /// 1-byte status field indicating current status about the table.
-  ///     Bits[7:1] = Reserved (must be zero)
-  ///     Bit [0] = Valid. A one indicates the boot image graphic is valid.
+  ///     Bits[7:3] = Reserved (must be zero)
+  ///     Bits[2:1] = Orientation Offset. These bits describe the clockwise degree offset
+  ///                 from the image’s default orientation.
+  ///                 [00] = 0, no offset
+  ///                 [01] = 90
+  ///                 [10] = 180
+  ///                 [11] = 270
+  ///     Bit [0] = Displayed. A one indicates the boot image graphic is displayed.
   ///
   UINT8                       Status;
   ///
