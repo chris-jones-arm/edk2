@@ -1,7 +1,7 @@
 /** @file
   State and accessors for 'acpiview' configuration.
 
-  Copyright (c) 2016 - 2020, ARM Limited. All rights reserved.<BR>
+  Copyright (c) 2016 - 2021, ARM Limited. All rights reserved.<BR>
   SPDX-License-Identifier: BSD-2-Clause-Patent
 **/
 
@@ -14,8 +14,8 @@
 STATIC BOOLEAN         mConsistencyCheck;
 STATIC BOOLEAN         mColourHighlighting;
 STATIC EREPORT_OPTION  mReportType;
-STATIC BOOLEAN         mMandatoryTableValidate;
-STATIC UINTN           mMandatoryTableSpec;
+STATIC BOOLEAN         mValidatorStatus;
+STATIC UINTN           mValidatorId;
 
 // User selection of which ACPI table should be checked
 SELECTED_ACPI_TABLE  mSelectedAcpiTable;
@@ -34,8 +34,8 @@ AcpiConfigSetDefaults (
   mSelectedAcpiTable.Name  = NULL;
   mSelectedAcpiTable.Found = FALSE;
   mConsistencyCheck        = TRUE;
-  mMandatoryTableValidate  = FALSE;
-  mMandatoryTableSpec      = 0;
+  mValidatorStatus         = FALSE;
+  mValidatorId             = 0;
 }
 
 /**
@@ -190,59 +190,59 @@ SetReportOption (
 }
 
 /**
-  This function returns the ACPI table requirements validation flag.
+  Return the ValidatorStatus flag.
 
-  @retval TRUE Check for mandatory table presence should be performed.
-**/
+  @retval TRUE   Validator should be run.
+  @retval FALSE  Validator should not be run.
+ **/
 BOOLEAN
 EFIAPI
-GetMandatoryTableValidate (
+GetValidatorStatus (
   VOID
   )
 {
-  return mMandatoryTableValidate;
+  return mValidatorStatus;
 }
 
 /**
-  This function sets the ACPI table requirements validation flag.
+  Set the ValidatorStatus flag.
 
-  @param [in] Validate Enable/Disable ACPI table requirements validation.
+  @param [in] Status  Enable (True)/Disable (False) running the optional
+                      Validator.
 **/
 VOID
 EFIAPI
-SetMandatoryTableValidate (
-  BOOLEAN  Validate
+SetValidatorStatus (
+  BOOLEAN  Status
   )
 {
-  mMandatoryTableValidate = Validate;
+  mValidatorStatus = Status;
 }
 
 /**
-  This function returns the identifier of specification to validate ACPI table
-  requirements against.
+  Return the ID of validator to run against the parsed ACPI tables.
 
-  @return ID of specification listing mandatory tables.
+  @return ID of validator to run.
 **/
 UINTN
 EFIAPI
-GetMandatoryTableSpec (
+GetValidatorId (
   VOID
   )
 {
-  return mMandatoryTableSpec;
+  return mValidatorId;
 }
 
 /**
-  This function sets the identifier of specification to validate ACPI table
-  requirements against.
+  Set the ID of the validator to run against the parsed ACPI tables.
 
-  @param [in] Spec ID of specification listing mandatory tables.
+  @param [in] ValidatorId  ID of validator.
 **/
 VOID
 EFIAPI
-SetMandatoryTableSpec (
-  UINTN  Spec
+SetValidatorId (
+  UINTN  ValidatorId
   )
 {
-  mMandatoryTableSpec = Spec;
+  mValidatorId = ValidatorId;
 }

@@ -227,13 +227,6 @@ ProcessAcpiTable (
     }
   }
 
- #if defined (MDE_CPU_ARM) || defined (MDE_CPU_AARCH64)
-  if (GetMandatoryTableValidate ()) {
-    ArmSbbrIncrementTableCount (*AcpiTableSignature);
-  }
-
- #endif
-
   Status = GetParser (*AcpiTableSignature, &ParserProc);
   if (EFI_ERROR (Status)) {
     // No registered parser found, do default handling.

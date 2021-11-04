@@ -199,7 +199,7 @@ ShellCommandRunAcpiView (
   LIST_ENTRY         *Package;
   CHAR16             *ProblemParam;
   SHELL_FILE_HANDLE  TmpDumpFileHandle;
-  CONST CHAR16       *MandatoryTableSpecStr;
+  CONST CHAR16       *ValidatorIdStr;
   CONST CHAR16       *SelectedTableName;
 
   // Set configuration defaults
@@ -306,12 +306,12 @@ ShellCommandRunAcpiView (
       // Surpress consistency checking if requested
       SetConsistencyChecking (!ShellCommandLineGetFlag (Package, L"-q"));
 
-      // Evaluate the parameters for mandatory ACPI table presence checks
-      SetMandatoryTableValidate (ShellCommandLineGetFlag (Package, L"-r"));
-      MandatoryTableSpecStr = ShellCommandLineGetValue (Package, L"-r");
+      // Evaluate the parameters for running validators
+      SetValidatorStatus (ShellCommandLineGetFlag (Package, L"-r"));
+      ValidatorIdStr = ShellCommandLineGetValue (Package, L"-r");
 
-      if (MandatoryTableSpecStr != NULL) {
-        SetMandatoryTableSpec (ShellHexStrToUintn (MandatoryTableSpecStr));
+      if (ValidatorIdStr != NULL) {
+        SetValidatorId (ShellStrToUintn (ValidatorIdStr));
       }
 
       if (ShellCommandLineGetFlag (Package, L"-l")) {
