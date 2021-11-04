@@ -1,6 +1,6 @@
 /** @file
 
-  Copyright (c) 2016 - 2020, ARM Limited. All rights reserved.
+  Copyright (c) 2016 - 2021, ARM Limited. All rights reserved.
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
   @par Glossary:
@@ -22,10 +22,6 @@
 #include "AcpiTableParser.h"
 #include "AcpiView.h"
 #include "AcpiViewConfig.h"
-
-#if defined (MDE_CPU_ARM) || defined (MDE_CPU_AARCH64)
-  #include "Arm/SbbrValidator.h"
-#endif
 
 STATIC UINT32  mTableCount;
 STATIC UINT32  mBinTableCount;
@@ -205,6 +201,7 @@ AcpiView (
   PARSE_ACPI_TABLE_PROC    RsdpParserProc;
   BOOLEAN                  Trace;
   SELECTED_ACPI_TABLE      *SelectedTable;
+  UINTN                    ValidatorId;
 
   //
   // set local variables to suppress incorrect compiler/analyzer warnings
@@ -250,13 +247,6 @@ AcpiView (
       return EFI_UNSUPPORTED;
     }
 
- #if defined (MDE_CPU_ARM) || defined (MDE_CPU_AARCH64)
-    if (GetMandatoryTableValidate ()) {
-      ArmSbbrResetTableCounts ();
-    }
-
- #endif
-
     // The RSDP length is 4 bytes starting at offset 20
     RsdpLength = *(UINT32 *)(RsdpPtr + RSDP_LENGTH_OFFSET);
 
@@ -284,13 +274,6 @@ AcpiView (
     return EFI_NOT_FOUND;
   }
 
- #if defined (MDE_CPU_ARM) || defined (MDE_CPU_AARCH64)
-  if (GetMandatoryTableValidate ()) {
-    ArmSbbrReqsValidate ((ARM_SBBR_VERSION)GetMandatoryTableSpec ());
-  }
-
- #endif
-
   ReportOption = GetReportOption ();
   if (ReportTableList != ReportOption) {
     if (((ReportSelected == ReportOption)  ||
@@ -301,6 +284,12 @@ AcpiView (
     } else if (GetConsistencyChecking () &&
                (ReportDumpBinFile != ReportOption))
     {
+      // Run additional validators from command line args
+      ValidatorId = GetValidatorId ();
+      if (GetValidatorStatus () && (ValidatorId != 0)) {
+        ASSERT (0);   // Validators not implemented yet
+      }
+
       OriginalAttribute = gST->ConOut->Mode->Attribute;
 
       Print (L"\nTable Statistics:\n");
