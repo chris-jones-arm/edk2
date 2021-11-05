@@ -311,7 +311,15 @@ ShellCommandRunAcpiView (
       ValidatorIdStr = ShellCommandLineGetValue (Package, L"-r");
 
       if (ValidatorIdStr != NULL) {
-        SetValidatorId (ShellStrToUintn (ValidatorIdStr));
+        Status = SetValidatorId (ShellStrToUintn (ValidatorIdStr));
+        if (EFI_ERROR (Status)) {
+          ShellStatus = SHELL_INVALID_PARAMETER;
+          Print (
+            L"ERROR: ValidatorId %d not recognised.\n",
+            ShellStrToUintn (ValidatorIdStr)
+            );
+          goto Done;
+        }
       }
 
       if (ShellCommandLineGetFlag (Package, L"-l")) {

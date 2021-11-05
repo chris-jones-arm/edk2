@@ -8,6 +8,8 @@
 #ifndef ACPI_VIEW_CONFIG_H_
 #define ACPI_VIEW_CONFIG_H_
 
+#include "Validators/AcpiValidation.h"
+
 /**
   This function returns the colour highlighting status.
 
@@ -81,7 +83,7 @@ SetValidatorStatus (
 
   @return ID of validator to run.
 **/
-UINTN
+VALIDATOR_ID
 EFIAPI
 GetValidatorId (
   VOID
@@ -92,7 +94,7 @@ GetValidatorId (
 
   @param [in] ValidatorId  ID of validator.
 **/
-VOID
+EFI_STATUS
 EFIAPI
 SetValidatorId (
   UINTN  ValidatorId

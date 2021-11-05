@@ -49,6 +49,9 @@
   Parsers/Srat/SratParser.c
   Parsers/Ssdt/SsdtParser.c
   Parsers/Xsdt/XsdtParser.c
+  Validators/AcpiValidation.c
+  Validators/AcpiValidation.h
+  Validators/AcpiStandard/AcpiStandardValidator.c
   UefiShellAcpiViewCommandLib.c
   UefiShellAcpiViewCommandLib.uni
 

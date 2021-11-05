@@ -15,7 +15,7 @@ STATIC BOOLEAN         mConsistencyCheck;
 STATIC BOOLEAN         mColourHighlighting;
 STATIC EREPORT_OPTION  mReportType;
 STATIC BOOLEAN         mValidatorStatus;
-STATIC UINTN           mValidatorId;
+STATIC VALIDATOR_ID    mValidatorId;
 
 // User selection of which ACPI table should be checked
 SELECTED_ACPI_TABLE  mSelectedAcpiTable;
@@ -35,7 +35,7 @@ AcpiConfigSetDefaults (
   mSelectedAcpiTable.Found = FALSE;
   mConsistencyCheck        = TRUE;
   mValidatorStatus         = FALSE;
-  mValidatorId             = 0;
+  mValidatorId             = ValidatorIdAcpiStandard;
 }
 
 /**
@@ -224,7 +224,7 @@ SetValidatorStatus (
 
   @return ID of validator to run.
 **/
-UINTN
+VALIDATOR_ID
 EFIAPI
 GetValidatorId (
   VOID
@@ -238,11 +238,17 @@ GetValidatorId (
 
   @param [in] ValidatorId  ID of validator.
 **/
-VOID
+EFI_STATUS
 EFIAPI
 SetValidatorId (
   UINTN  ValidatorId
   )
 {
+  if (ValidatorId >= ValidatorIdMax) {
+    return EFI_INVALID_PARAMETER;
+  }
+
   mValidatorId = ValidatorId;
+
+  return EFI_SUCCESS;
 }

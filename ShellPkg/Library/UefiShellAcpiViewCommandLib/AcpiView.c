@@ -22,6 +22,7 @@
 #include "AcpiTableParser.h"
 #include "AcpiView.h"
 #include "AcpiViewConfig.h"
+#include "Validators/AcpiValidation.h"
 
 STATIC UINT32  mTableCount;
 STATIC UINT32  mBinTableCount;
@@ -284,10 +285,13 @@ AcpiView (
     } else if (GetConsistencyChecking () &&
                (ReportDumpBinFile != ReportOption))
     {
+      // Always run the ACPI validator
+      RunValidator (ValidatorIdAcpiStandard);
+
       // Run additional validators from command line args
       ValidatorId = GetValidatorId ();
-      if (GetValidatorStatus () && (ValidatorId != 0)) {
-        ASSERT (0);   // Validators not implemented yet
+      if (GetValidatorStatus () && (ValidatorId != ValidatorIdAcpiStandard)) {
+        RunValidator (ValidatorId);
       }
 
       OriginalAttribute = gST->ConOut->Mode->Attribute;
