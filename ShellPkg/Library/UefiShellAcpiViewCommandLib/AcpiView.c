@@ -23,6 +23,7 @@
 #include "AcpiView.h"
 #include "AcpiViewConfig.h"
 #include "Validators/AcpiValidation.h"
+#include "Validators/AcpiDataStore.h"
 
 STATIC UINT32  mTableCount;
 STATIC UINT32  mBinTableCount;
@@ -218,6 +219,9 @@ AcpiView (
   ResetErrorCount ();
   ResetWarningCount ();
 
+  // Initialise the ACPI data store
+  InitAcpiDataStore ();
+
   // Retrieve the user selection of ACPI table to process
   GetSelectedAcpiTable (&SelectedTable);
 
@@ -293,6 +297,8 @@ AcpiView (
       if (GetValidatorStatus () && (ValidatorId != ValidatorIdAcpiStandard)) {
         RunValidator (ValidatorId);
       }
+
+      FreeAcpiDataStore ();
 
       OriginalAttribute = gST->ConOut->Mode->Attribute;
 

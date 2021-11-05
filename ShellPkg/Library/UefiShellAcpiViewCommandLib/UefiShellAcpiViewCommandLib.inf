@@ -51,6 +51,8 @@
   Parsers/Xsdt/XsdtParser.c
   Validators/AcpiValidation.c
   Validators/AcpiValidation.h
+  Validators/AcpiDataStore.c
+  Validators/AcpiDataStore.h
   Validators/AcpiStandard/AcpiStandardValidator.c
   UefiShellAcpiViewCommandLib.c
   UefiShellAcpiViewCommandLib.uni
