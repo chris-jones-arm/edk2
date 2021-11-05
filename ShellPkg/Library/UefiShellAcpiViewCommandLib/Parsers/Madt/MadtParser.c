@@ -16,6 +16,7 @@
 #include "AcpiParser.h"
 #include "AcpiTableParser.h"
 #include "AcpiViewConfig.h"
+#include "Validators/AcpiDataStore.h"
 #include "MadtParser.h"
 
 // Local Variables
@@ -281,9 +282,10 @@ ParseAcpiMadt (
   IN UINT8    AcpiTableRevision
   )
 {
-  UINT32  Offset;
-  UINT8   *InterruptContollerPtr;
-  UINT32  GICDCount;
+  UINT32      Offset;
+  UINT8       *InterruptContollerPtr;
+  UINT32      GICDCount;
+  EFI_STATUS  Status;
 
   GICDCount = 0;
 
@@ -352,6 +354,21 @@ ParseAcpiMadt (
           *MadtInterruptControllerLength,
           PARSER_PARAMS (GicCParser)
           );
+
+        Status = StoreAcpiMetaData (
+                   MetaDataMadtGicC,
+                   MetaDataMadtGicC,
+                   InterruptContollerPtr,
+                   *MadtInterruptControllerLength
+                   );
+        if (EFI_ERROR (Status)) {
+          Print (
+            L"ERROR: Unable to store GICC type structure." \
+            L"Status = 0x%x.",
+            Status
+            );
+        }
+
         break;
       }
 
