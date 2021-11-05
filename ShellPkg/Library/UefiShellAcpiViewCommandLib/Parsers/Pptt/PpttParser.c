@@ -14,6 +14,7 @@
 #include "AcpiParser.h"
 #include "AcpiView.h"
 #include "AcpiViewConfig.h"
+#include "Validators/AcpiDataStore.h"
 #include "PpttParser.h"
 
 // Local variables
@@ -257,9 +258,10 @@ DumpProcessorHierarchyNodeStructure (
   IN UINT8  Length
   )
 {
-  UINT32  Offset;
-  UINT32  Index;
-  CHAR16  Buffer[OUTPUT_FIELD_COLUMN_WIDTH];
+  UINT32      Offset;
+  UINT32      Index;
+  CHAR16      Buffer[OUTPUT_FIELD_COLUMN_WIDTH];
+  EFI_STATUS  Status;
 
   Offset = ParseAcpi (
              TRUE,
@@ -269,6 +271,22 @@ DumpProcessorHierarchyNodeStructure (
              Length,
              PARSER_PARAMS (ProcessorHierarchyNodeStructureParser)
              );
+
+  // Store the data for validation later.
+  Status = StoreAcpiMetaData (
+             MetaDataPpttProcs,
+             MetaDataPpttProcs,
+             Ptr,
+             Length
+             );
+  if (EFI_ERROR (Status)) {
+    Print (
+      L"\nERROR: Unable to store processor type structure." \
+      L" Status = 0x%x.",
+      Status
+      );
+    return;
+  }
 
   // Check if the values used to control the parsing logic have been
   // successfully read.
