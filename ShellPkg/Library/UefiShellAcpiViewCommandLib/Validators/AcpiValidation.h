@@ -12,8 +12,11 @@
   ID's for all known validators.
 **/
 typedef enum {
-  ValidatorIdAcpiStandard = 0,     ///< Platform agnostic ACPI spec checks.
-  ValidatorIdMax          = 1
+  ValidatorIdSbbr10       = 0,   ///< Arm SBBR 1.0 specification checks
+  ValidatorIdSbbr11       = 1,   ///< Arm SBBR 1.1 specification checks
+  ValidatorIdSbbr12       = 2,   ///< Arm SBBR 1.2 specification checks
+  ValidatorIdAcpiStandard = 3,   ///< Platform agnostic ACPI spec checks.
+  ValidatorIdMax          = 4
 } VALIDATOR_ID;
 
 /**
@@ -48,6 +51,30 @@ VOID
 EFIAPI
 AcpiStandardValidate (
   VOID
+  );
+
+/**
+  Definition in Arm/SbbrValidator.c
+**/
+VOID
+EFIAPI
+Sbbr10Validate (
+  );
+
+/**
+  Definition in Arm/SbbrValidator.c
+**/
+VOID
+EFIAPI
+Sbbr11Validate (
+  );
+
+/**
+  Definition in Arm/SbbrValidator.c
+**/
+VOID
+EFIAPI
+Sbbr12Validate (
   );
 
 #endif

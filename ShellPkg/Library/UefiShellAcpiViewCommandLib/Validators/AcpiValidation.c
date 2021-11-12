@@ -13,6 +13,9 @@
   List of all validators that can be run.
 **/
 ACPI_VALIDATOR  mValidatorList[] = {
+  { ValidatorIdSbbr10,       Sbbr10Validate       },
+  { ValidatorIdSbbr11,       Sbbr11Validate       },
+  { ValidatorIdSbbr12,       Sbbr12Validate       },
   { ValidatorIdAcpiStandard, AcpiStandardValidate }
 };
 
