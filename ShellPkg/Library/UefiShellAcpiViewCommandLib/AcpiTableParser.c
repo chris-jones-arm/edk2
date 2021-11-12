@@ -18,6 +18,7 @@
 #include "AcpiTableParser.h"
 #include "AcpiView.h"
 #include "AcpiViewConfig.h"
+#include "Validators/AcpiDataStore.h"
 
 #if defined (MDE_CPU_ARM) || defined (MDE_CPU_AARCH64)
   #include "Arm/SbbrValidator.h"
@@ -243,4 +244,24 @@ ProcessAcpiTable (
     *AcpiTableLength,
     *AcpiTableRevision
     );
+
+  // Record that the table has been installed.
+  Status = StoreAcpiMetaData (
+             MetaDataInstalledTables,
+             MetaDataInstalledTables,
+             (UINT32 *)AcpiTableSignature,
+             sizeof (AcpiTableSignature)
+             );
+  if (EFI_ERROR (Status)) {
+    Print (
+      L"\nERROR: Unable to store %c%c%c%c signature." \
+      L" Status = 0x%x.",
+      SignaturePtr[0],
+      SignaturePtr[1],
+      SignaturePtr[2],
+      SignaturePtr[3],
+      Status
+      );
+    return;
+  }
 }
