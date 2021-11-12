@@ -12,8 +12,9 @@
   Types of data that can be stored and accessed in the ACPI data store.
 **/
 typedef enum MetaDataType {
-  MetaDataPpttProcs = 0,   ///< List of all PPTT processor structures.
-  MetaDataMadtGicC  = 1,   ///< List of all MADT GICC structures.
+  MetaDataPpttProcs       = 0,  ///< List of all PPTT processor structures.
+  MetaDataMadtGicC        = 1,  ///< List of all MADT GICC structures.
+  MetaDataInstalledTables = 2,  ///< Signatures of all installed ACPI tables.
   MetaDataMax
 } META_DATA_TYPE;
 
