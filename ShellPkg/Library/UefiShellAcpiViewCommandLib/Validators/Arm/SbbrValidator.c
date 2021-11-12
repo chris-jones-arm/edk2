@@ -1,7 +1,7 @@
 /** @file
   Arm Server Base Boot Requirements ACPI table requirement validator.
 
-  Copyright (c) 2020, ARM Limited. All rights reserved.
+  Copyright (c) 2021, ARM Limited. All rights reserved.
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
   @par Glossary:
@@ -18,7 +18,9 @@
 #include <Library/DebugLib.h>
 #include <Library/UefiLib.h>
 #include "AcpiParser.h"
-#include "Arm/SbbrValidator.h"
+#include "AcpiViewConfig.h"
+#include "Validators/AcpiDataStore.h"
+#include "SbbrValidator.h"
 
 /**
   SBBR specification version strings
@@ -220,4 +222,95 @@ ArmSbbrReqsValidate (
   Print (L"\n");
 
   return IsArmSbbrViolated ? EFI_NOT_FOUND : EFI_SUCCESS;
+}
+
+/**
+  Validate that the mandatory ACPI tables have been installed according to the
+  SBBR specification.
+
+  @param [in]  Version      SBBR spec version to validate against.
+**/
+VOID
+EFIAPI
+ValidateSbbrMandatoryTables (
+  ARM_SBBR_VERSION  Version
+  )
+{
+  EFI_STATUS      Status;
+  META_DATA_NODE  *TableListHead;
+  META_DATA_NODE  *TableList;
+  UINT32          Signature;
+
+  Status = GetMetaDataListHead (MetaDataInstalledTables, &TableListHead);
+  if (EFI_ERROR (Status)) {
+    IncrementErrorCount ();
+    Print (
+      L"\nERROR: Cannot get list of installed tables."
+      L" Status = 0x%x.",
+      Status
+      );
+    return;
+  }
+
+  TableList = (META_DATA_NODE *)GetFirstNode (&TableListHead->Link);
+
+  while (!IsNull (&TableListHead->Link, &TableList->Link)) {
+    Signature = *(UINT32 *)TableList->Data;
+    ArmSbbrIncrementTableCount (Signature);
+
+    TableList = (META_DATA_NODE *)GetNextNode (
+                                    &TableListHead->Link,
+                                    &TableList->Link
+                                    );
+  }
+
+  Status = ArmSbbrReqsValidate (Version);
+  if (EFI_ERROR (Status)) {
+    Print (L"\nERROR: Failed to validate SBBR mandatory tables.\n");
+    return;
+  }
+
+  ArmSbbrResetTableCounts ();
+}
+
+/**
+  Validate that the mandatory ACPI tables have been installed according to the
+  SBBR 1.0 specification.
+**/
+VOID
+EFIAPI
+Sbbr10Validate (
+  )
+{
+  if (GetReportOption () != ReportSelected) {
+    ValidateSbbrMandatoryTables (ArmSbbrVersion_1_0);
+  }
+}
+
+/**
+  Validate that the mandatory ACPI tables have been installed according to the
+  SBBR 1.1 specification.
+**/
+VOID
+EFIAPI
+Sbbr11Validate (
+  )
+{
+  if (GetReportOption () != ReportSelected) {
+    ValidateSbbrMandatoryTables (ArmSbbrVersion_1_1);
+  }
+}
+
+/**
+  Validate that the mandatory ACPI tables have been installed according to the
+  SBBR 1.2 specification.
+**/
+VOID
+EFIAPI
+Sbbr12Validate (
+  )
+{
+  if (GetReportOption () != ReportSelected) {
+    ValidateSbbrMandatoryTables (ArmSbbrVersion_1_2);
+  }
 }

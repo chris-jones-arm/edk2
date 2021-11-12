@@ -1,7 +1,7 @@
 /** @file
   Header file for SbbrValidator.c
 
-  Copyright (c) 2020, ARM Limited. All rights reserved.
+  Copyright (c) 2021, ARM Limited. All rights reserved.
   SPDX-License-Identifier: BSD-2-Clause-Patent
 
   @par Glossary:
@@ -45,47 +45,5 @@ typedef struct AcpiSbbrReq {
   CONST UINT32    *Tables;       /// List of required tables
   CONST UINT32    TableCount;    /// Number of elements in Tables
 } ACPI_SBBR_REQ;
-
-/**
-  Reset the platform ACPI table instance count for all SBBR-mandatory tables.
-**/
-VOID
-EFIAPI
-ArmSbbrResetTableCounts (
-  VOID
-  );
-
-/**
-  Increment instance count for SBBR-mandatory ACPI table with the given
-  signature.
-
-  @param [in]  Signature        ACPI table signature.
-
-  @retval TRUE      Count incremented successfully.
-  @retval FALSE     Table with the input signature not found.
-**/
-BOOLEAN
-EFIAPI
-ArmSbbrIncrementTableCount (
-  UINT32  Signature
-  );
-
-/**
-  Validate that all ACPI tables required by the given SBBR specification
-  version are installed on the platform.
-
-  @param [in]  Version      SBBR spec version to validate against.
-
-  @retval EFI_SUCCESS             All required tables are present.
-  @retval EFI_INVALID_PARAMETER   Invalid SBBR version.
-  @retval EFI_NOT_FOUND           One or more mandatory tables are missing.
-  @retval EFI_UNSUPPORTED         Mandatory ACPI table does not have its
-                                  instance count tracked.
-**/
-EFI_STATUS
-EFIAPI
-ArmSbbrReqsValidate (
-  ARM_SBBR_VERSION  Version
-  );
 
 #endif // SBBR_VALIDATOR_H_
